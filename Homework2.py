@@ -23,22 +23,29 @@ def add_contact(args, contacts):
         return "This contact already exists"
     return "Contact added."
 
+
+@input_error
 def change_username_phone(args, contacts):
-    try:
-        name, phone = args
-    except:
-        return "You have entered insufficient data"
+    name, phone = args
     if name in contacts:
         contacts[name] = phone
     else:
         return "There is no such contact"
     return f"Contact {name} changed his phone numer for {phone}"
 
+
+def index_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except IndexError:
+            return "That contact is not on the list"
+
+    return inner
+
+@index_error
 def phone_username(args, contacts):
-    try:
-        name = args[1]
-    except:
-        return "That contact is not on the list"
+    name = args[1]
     if name in contacts:
         phone = contacts[name]
     else:
